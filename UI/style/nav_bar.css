@@ -1,0 +1,67 @@
+
+/* Title */
+#title_bar {
+    display : grid;
+    grid-template-columns: auto auto auto;
+}
+#title {
+    text-align : center
+}
+
+/* Navigation bar */
+#navigation {
+
+    display : grid;
+    grid-template-columns: 50% 50%;
+}
+.input_scrape {
+    background-color : black;
+    color : white;
+    border : 2px;
+    border-color : black;
+    padding : 5px;
+    text-align: center; 
+    cursor : pointer;
+
+    border-style : solid;
+    border-width : 2px;
+    border-color : black;
+}
+.input_scrape:hover {
+    background-color : white;
+    color : black;
+    border-style : solid;
+    border-width : 2px;
+    border-color : black;
+}
+
+.saved_scrapes {
+    background-color : black;
+    color : white;
+    border : 2px;
+    border-color : black;
+    padding : 5px;
+    text-align : center;
+    cursor : pointer;
+
+    border-style : solid;
+    border-width : 2px;
+    border-color : black;
+}
+.saved_scrapes:hover {
+    background-color : white;
+    color : black;
+    border-style : solid;
+    border-width : 2px;
+    border-color : black;
+}
+
+
+/* Images */
+img.gnome {
+    width : 80px; /* 40% */
+    height : 80px; /* 40% */
+    margin : auto;
+    /* min-width: 380px;
+    min-height: 380px; */
+}
