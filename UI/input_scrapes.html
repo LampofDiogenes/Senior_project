@@ -14,9 +14,12 @@
     <div>
         <p>Target URL : </p>
         <input type="text" id="target_url">
-        <button id="buttonExecute"> Scrape </button>
+
+        <!-- on button click : scrape website -->
+        <button id="buttonExecute" onclick="scrape_website"> Scrape </button>
 
   </body>
+  <script id="scrape_website" src="./scripts"></script>
   <script src="./scripts/fetch_navigation.js"></script>
   <script src="./renderers/input_scrapes.js"></script>
 </html>
