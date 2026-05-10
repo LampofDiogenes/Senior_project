@@ -15,12 +15,21 @@
         <p>Target URL : </p>
         <input type="text" id="target_url">
 
-        <!-- on button click : scrape website -->
-        <button id="buttonExecute" onclick="scrape_website"> Scrape </button>
+        <!-- on button click : wired in renderers/input_scrapes.js -->
 
+        <!-- Shows syntax for referencing external javascript -->
+
+        <button 
+          type="button" 
+          id="buttonExecute" 
+          onclick="fetch_html_code(target_url.value)">
+          Scrape
+        </button>
+
+    </div>
+    <script src="./scripts/fetch_html_code.js"></script>
+    <script src="./scripts/fetch_navigation.js"></script>
+    <script src="./renderers/input_scrapes.js"></script>
   </body>
-  <script id="scrape_website" src="./scripts"></script>
-  <script src="./scripts/fetch_navigation.js"></script>
-  <script src="./renderers/input_scrapes.js"></script>
 </html>
     
