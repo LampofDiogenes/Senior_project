@@ -20,7 +20,7 @@ function removeFile(filePath) {
 try {
   contextBridge.exposeInMainWorld('nodeFunctions', {
     readFile: (p) => fs.readFileSync(p, 'utf-8'),
-    createFile: (path, content) => fs.writeFileSync(path, content),
+    createFile: (path, content, format) => fs.writeFileSync(path, content, format),
     deleteFile : (filePath) => removeFile(filePath)
   });
 } catch (err) {

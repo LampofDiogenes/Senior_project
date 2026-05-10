@@ -1,3 +1,6 @@
+const fs = require('fs');
+
+
 async function fetch_html_code(URL)
 {
     // debugging and prettifying
@@ -10,11 +13,10 @@ async function fetch_html_code(URL)
     if (!response.ok){
         throw new Error(`Response status: ${response.status}`);
     }
-    let webpage_html = await response.text();
+    let data = await response.text();
 
     // THESE NEED TO BE CODED
-    const file_path = create_file(URL) // creates the path for the file
-    input_data(webpage_html, file_path) // populates the file with the data scraped
+    const file_path = create_file(URL, data) // creates the path for the file
 
 
     console.log("html code has been fetched");
@@ -22,22 +24,23 @@ async function fetch_html_code(URL)
 
 // Creates the path for the file
 // INCOMPLETE!!!!
-function create_file(website_name)
+function create_file(URL, data)
 {
-    // if the website name starts with https : remove the first 13 characters,
-    // if the website name starts with http : remove the first 12 characters instead
-    // remove the last 4 characters at the end of the website.
-    // convert any '/' to '-'
-    // set website name to the remaining characters
-    // create the file in the scrapes folder
-    // set the file_name to be the modified webite name
-    // create the file.
-}
+    // Step 1  : if the website name starts with https : remove the first 13 characters,
+    // Step 1a : if the website name starts with http : remove the first 12 characters instead
+    // Step 2  : remove the last 4 characters at the end of the website.
+    // Step 3  : convert any '/' to '-'
+    // step 4  : set website name to the remaining characters
 
-// populates the file with the data that has been scraped
-// INCOMPLETE!!!!
-function input_data(data, file_path)
-{
-    // take the data from the scrape previously
-    // insert all the data into the file made by create_file
+
+    // Step 5  : create the file in the scrapes folder
+    // Step 6  : set the file_name to be the modified webite name
+    // Step 7  : create the file.
+    const file_name = "testing1"
+    const content = data
+    const format = 'UTF-8'
+
+    // this is failing because the eapplication is trying
+    // to import at runtime. Try using context bridge
+    fs.writeFile(file_name, content, format)  
 }
