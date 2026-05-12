@@ -18,11 +18,17 @@ function removeFile(filePath) {
 
 
 try {
-  contextBridge.exposeInMainWorld('nodeFunctions', {
-    readFile: (p) => fs.readFileSync(p, 'utf-8'),
-    createFile: (path, content, format) => fs.writeFileSync(path, content, format),
-    deleteFile : (filePath) => removeFile(filePath)
-  });
+  contextBridge.exposeInMainWorld(
+    'nodeFunctions', 
+    {
+        // readFile: (p) => fs.readFileSync(p, 'utf-8'),
+        // createFile: (path, content, format) => fs.writeFileSync(path, content, format),
+        // deleteFile : (filePath) => removeFile(filePath)
+
+        readFile: (p) => fs.readFileSync(p, 'utf-8'),
+        createFile: (path, content, format) => fs.writeFileSync(path, content, format),
+        deleteFile : (filePath) => removeFile(filePath)
+    });
 } catch (err) {
   console.error('Context Bridge error:', err);
 }

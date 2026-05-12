@@ -1,4 +1,4 @@
-const fs = require('fs');
+// const { contextBridge } = require('electron');
 
 
 async function fetch_html_code(URL)
@@ -42,5 +42,7 @@ function create_file(URL, data)
 
     // this is failing because the eapplication is trying
     // to import at runtime. Try using context bridge
-    fs.writeFile(file_name, content, format)  
+    // fs.writeFile(file_name, content, format)  
+
+    window.nodeFunctions.createFile(file_name, content, format)
 }
