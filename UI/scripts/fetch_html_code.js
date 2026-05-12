@@ -33,16 +33,12 @@ function create_file(URL, data)
     // step 4  : set website name to the remaining characters
 
 
-    // Step 5  : create the file in the scrapes folder
-    // Step 6  : set the file_name to be the modified webite name
-    // Step 7  : create the file.
+    // Step 5  : create the file, placing it into the scrapes folder
     const file_name = "testing1"
+    const file_path = "UI/scrapes/" + file_name
     const content = data
     const format = 'UTF-8'
 
-    // this is failing because the eapplication is trying
-    // to import at runtime. Try using context bridge
-    // fs.writeFile(file_name, content, format)  
 
-    window.nodeFunctions.createFile(file_name, content, format)
+    window.nodeFunctions.createFile(file_path, content, format)
 }
