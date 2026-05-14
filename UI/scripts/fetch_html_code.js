@@ -15,11 +15,8 @@ async function fetch_html_code(URL)
     }
     let data = await response.text();
 
-    // THESE NEED TO BE CODED
-    const file_path = create_file(URL, data) // creates the path for the file
-
-
-    console.log("html code has been fetched");
+    // creates the file
+    create_file(URL, data) 
 }
 
 // FUTURE BUG!! 
@@ -28,28 +25,37 @@ function create_file(URL, data)
 {
     
     let URL_name = 'naming_fail'
-    const first_letters = URL.slice(0,4)
-    console.log(first_letters)
 
-    // Step 1  : if the website name starts with https : remove the first 12 characters,
-    // Step 1a : if the website name starts with http : remove the first 11 characters instead
+    // check to make sure that the inputted website is still valid
     if (URL.slice(0, 4) === 'http')
     {
-
-        // Step 2  : remove the last 4 characters at the end of the website.
-        // step 4  : set website name to the remaining characters
+        // remove 'https:www.' and '.com'
         const array = URL.split("."); 
         URL_name = array[1];
 
-        // Step 3  : convert any '/' to '-'
+        // convert any '/' to '-'
         URL_name = URL_name.replaceAll('/', '-');
     }
-    
-    // Step 5  : create the file, placing it into the scrapes folder
+
     const file_path = "UI/scrapes/" + URL_name
-    const content = data
-    const format = 'UTF-8'
 
+    // check to see if the file was correctly named
+    if (URL_name === 'naming_fail') {
+        console.error('Gnome failed to correctly name the file')
+    }
 
-    window.nodeFunctions.createFile(file_path, content, format)
+    // check to see if the file already exists
+    else if (window.nodeFunctions.existsSync(file_path) ) {
+        console.error('Gnome detected that this file already exists')
+    }
+
+    // create the file in UI/scrapes
+    else{
+        const file_path = file_path
+        const content = data
+        const format = 'UTF-8'
+        window.nodeFunctions.createFile(file_path, content, format)
+
+        console.log("html code has been fetched");
+    }
 }
