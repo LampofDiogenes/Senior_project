@@ -1,4 +1,3 @@
-// const { contextBridge } = require('electron');
 
 
 async function fetch_html_code(URL)
@@ -20,10 +19,9 @@ async function fetch_html_code(URL)
 }
 
 // FUTURE BUG!! 
-// Will need to check to see if the file already exists. If it does, it needs to compare instead
+// Will need to compare a file if the file already exists
 function create_file(URL, data)
-{
-    
+{    
     let URL_name = 'naming_fail'
 
     // check to make sure that the inputted website is still valid
@@ -35,8 +33,9 @@ function create_file(URL, data)
 
         // convert any '/' to '-'
         URL_name = URL_name.replaceAll('/', '-');
-    }
+    }  
 
+    // afterwards, set the file name to be the site name
     const file_path = "UI/scrapes/" + URL_name
 
     // check to see if the file was correctly named
@@ -51,7 +50,6 @@ function create_file(URL, data)
 
     // create the file in UI/scrapes
     else{
-        const file_path = file_path
         const content = data
         const format = 'UTF-8'
         window.nodeFunctions.createFile(file_path, content, format)

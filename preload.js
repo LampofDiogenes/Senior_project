@@ -21,10 +21,17 @@ try {
   contextBridge.exposeInMainWorld(
     'nodeFunctions', 
     {
-        readFile: (p) => fs.readFileSync(p, 'utf-8'),
+        // found in fetch_html_code
         createFile: (path, content, format) => fs.writeFileSync(path, content, format),
+        existsSync : (p) => fs.existsSync(p),
+
+        // found in display_scrapes.js
+        readdir : (dir) => fs.readdir(dir, (err, files)),
+        readdirSync : (dir) => fs.readdirSync(dir),
+
+        // might be important later
         deleteFile : (filePath) => removeFile(filePath),
-        existsSync : (p) => fs.existsSync(p)
+        readFile: (p) => fs.readFileSync(p, 'utf-8')
     });
 } catch (err) {
   console.error('Context Bridge error:', err);

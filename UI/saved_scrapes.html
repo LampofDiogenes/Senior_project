@@ -10,11 +10,19 @@
     <!-- header -->
     <div id="nav_bar"></div>
 
-    
+      <!-- on click, run the scrape program -->
+    <button 
+      type="button" 
+      id="buttonExecute" 
+      onclick="readfiles('UI/scrapes')">
+      How many files are in the scrapes folder?
+    </button>
 
   </body>
-  <script type="module" src="../scripts/scrape.mjs" id="scrape"></script>
-  <script type="module" src="../scripts/save_file.js" id="save_file"></script>
+  <!-- currently counts how many files are in a certain folder -->
   <script src="./scripts/fetch_navigation.js"></script>
+
+  <!-- builds nav bar -->
+  <script src="./scripts/display_scrapes.js"></script>
 </html>
     
