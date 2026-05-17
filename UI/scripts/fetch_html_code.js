@@ -1,5 +1,3 @@
-
-
 async function fetch_html_code(URL)
 {
     // debugging and prettifying

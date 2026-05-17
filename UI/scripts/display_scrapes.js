@@ -19,13 +19,17 @@ function readfiles(path)
     console.log(folder)
 }
 
-function makeUI(path)
+function makeUI(path, parent_div)
 {
     const folder = window.nodeFunctions.readdirSync(path)
+    let file_name = 'error'
 
     for (let i = 0; i < folder.length; i++)
     {
-        document.getElementById()
+        file_name = folder[i] // find the file
+        let element = document.createElement(file_name) // make the element have the name of the filename
+        element.textContent = file_name // make the element's content be the filename
+        parent_div.appendChild(element) // add the element to the DOM
     }
     
 }

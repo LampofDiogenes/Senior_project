@@ -10,19 +10,23 @@
     <!-- header -->
     <div id="nav_bar"></div>
 
-      <!-- on click, run the scrape program -->
+    <!-- on click, run the scrape program -->
     <button 
       type="button" 
       id="buttonExecute" 
-      onclick="readfiles('UI/scrapes')">
+      onclick="makeUI('UI/scrapes', 'insert_target')">
       How many files are in the scrapes folder?
     </button>
+    <div id="insert_target"></div>
 
   </body>
-  <!-- currently counts how many files are in a certain folder -->
+  
+  <!-- builds nav bar -->
   <script src="./scripts/fetch_navigation.js"></script>
 
-  <!-- builds nav bar -->
+  <!-- currently counts how many files are in a certain folder -->
+  <!-- Inserts buttons for each of the scrapes -->
   <script src="./scripts/display_scrapes.js"></script>
+
 </html>
     
