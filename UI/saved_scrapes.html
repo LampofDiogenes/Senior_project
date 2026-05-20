@@ -4,20 +4,23 @@
     <meta charset="UTF-8" />
     <title>Web Gnome - Saved Scrapes</title>
     <link rel="stylesheet" href="style/nav_bar.css">
+    <link rel="stylesheet" href="style/saved_scrapes.css">
   </head>
 
   <body 
     onload="makeUI(
         'UI/scrapes', 
-        document.getElementById('insert_target')
+        document.getElementById('data_table')
       )"
   >
     <!-- header -->
     <div id="nav_bar"></div>
 
-    <div> Websites Currently Scraped: </div>
+    <header> <b> Websites Currently Scraped: </b></header>
+
+
     <!-- on load, send the information to this div -->
-    <div id="insert_target"></div>
+    <table id="data_table"></table>
 
   </body>
   
