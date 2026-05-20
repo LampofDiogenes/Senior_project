@@ -27,8 +27,9 @@ function makeUI(path, parent_div)
     for (let i = 0; i < folder.length; i++)
     {
         file_name = folder[i] // find the file
-        let element = document.createElement(file_name) // make the element have the name of the filename
-        element.textContent = file_name // make the element's content be the filename
+        let element = document.createElement('div') // make the element have the name of the filename
+        element.textContent = file_name  // make the element's content be the filename
+        element.id = file_name
         parent_div.appendChild(element) // add the element to the DOM
     }
     

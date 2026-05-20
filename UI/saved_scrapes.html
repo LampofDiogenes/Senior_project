@@ -6,17 +6,17 @@
     <link rel="stylesheet" href="style/nav_bar.css">
   </head>
 
-  <body>
+  <body 
+    onload="makeUI(
+        'UI/scrapes', 
+        document.getElementById('insert_target')
+      )"
+  >
     <!-- header -->
     <div id="nav_bar"></div>
 
-    <!-- on click, run the scrape program -->
-    <button 
-      type="button" 
-      id="buttonExecute" 
-      onclick="makeUI('UI/scrapes', document.getElementById('insert_target'))">
-      How many files are in the scrapes folder?
-    </button>
+    <div> Websites Currently Scraped: </div>
+    <!-- on load, send the information to this div -->
     <div id="insert_target"></div>
 
   </body>
@@ -24,8 +24,7 @@
   <!-- builds nav bar -->
   <script src="./scripts/fetch_navigation.js"></script>
 
-  <!-- currently counts how many files are in a certain folder -->
-  <!-- Inserts buttons for each of the scrapes -->
+  <!-- displays all file names in a sepcifc folder -->
   <script src="./scripts/display_scrapes.js"></script>
 
 </html>
