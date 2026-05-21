@@ -24,6 +24,7 @@ try {
         // found in fetch_html_code
         createFile: (path, content, format) => fs.writeFileSync(path, content, format),
         existsSync : (p) => fs.existsSync(p),
+        mkdirSync : (p) => fs.mkdirSync(p),
 
         // found in display_scrapes.js
         readdir : (dir) => fs.readdir(dir, (err, files)),

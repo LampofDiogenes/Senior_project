@@ -15,11 +15,14 @@
         <p>Target URL : </p>
         <input type="text" id="target_url">
 
+        <p>Scrape Frequency : </p>
+        <input type="text" id="scrape_frequency">
+
         <!-- on click, run the scrape program -->
         <button 
           type="button" 
           id="buttonExecute" 
-          onclick="fetch_html_code(target_url.value)">
+          onclick="fetch_html_code(target_url.value, scrape_frequency.value)">
           Scrape
         </button>
 

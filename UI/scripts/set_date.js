@@ -19,14 +19,6 @@
         // data from most current scrape
         // data from previous to last current scrape
 
-function when_scrape_again()
-{
-    const today = new Date()
-    const month = today.getMonth()
-    const day = today.getDay()
-
-}
-
 
 
 
