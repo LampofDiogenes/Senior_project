@@ -34,12 +34,11 @@ function hobart_brothers()
 
         // need to find the product itself:
             // make a for loop, finding each thing having "'fwpl-result r' + x"
+            // this finds the product itself
             // go to that URL
-
-                // In that for loop : 
-                    // find the table with the id : ='available-products'
-                    // this has the information that we need.
-                    // store this information, and keep it in a place so we can compare again later
+            // find the table with the id : ='available-products'
+            // this has all the sub-products (information we want)
+            // store this information, and keep it in a place so we can compare again later
     }
 
     
