@@ -18,7 +18,3 @@
         // date when to scrape again
         // data from most current scrape
         // data from previous to last current scrape
-
-
-
-

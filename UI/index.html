@@ -17,7 +17,40 @@
      <!-- creates navigation here -->
      <div id="nav_bar"></div>
     
-    <div> Welcome to Web Gnome! Click on </div>
+    <h1> Welcome to Web Gnome! </h1>
+    <h3> Click on the Gnome to return to this tutorial if lost </h3>
+    <h2>Input Scrape : </h2>
+      <div> This is the area to add a recurring scrape to the application. </div>
+      <div> Once you have decided which URL you would like to scrape, add the address directly into 
+        the 'target URL' area (copy paste works GREAT!)
+      </div>
+      <div> Add the URL name directly to the Target URL</div>
+      <div> decide how often you would like to scrape. currently we have 3 options : daily, weekly, and monthly.
+        web gnome will default to daily.
+      </div>
+      <div> This will
+        add a process in the background to scrape accordingly.
+        (additional scrapes will not add more processes.)
+      </div>
+
+      <div> Lastly, the scrape recursively button (if you select it) will go through each connected
+        website, and scrape those as well. This is great if you want to track the entire infrastructure of a website.
+        Be careful though : Large websites (such as wikipedia) may take a large time to run. In the future, may implement
+        a maximum depth to scrape.
+      </div>
+
+    <h2> Saved Scrapes: </h2>
+    <div> This is here to see your scrapes, and (in the future) modify the 
+      paramters of your scrapes. </div>
+      
+    <div>Key : </div> 
+    <div>
+      <div> Number: for your convience tracking them. No functional purpose </div>
+      <div> Website name: the name of the Website (and sometimes subpage) </div>
+      <div> Scrape Frequency : how often web gnome will run a scrape on this Website </div>
+      <div> Scraped previously : determines if web gnome should compare scrapes to find differences </div>
+      <div> Scrape recursively : asking if web gnome should scrape any connected web-pages </div>
+    </div>
   </body>
   <script src="./scripts/fetch_navigation.js"></script>
   

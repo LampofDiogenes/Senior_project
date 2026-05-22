@@ -12,11 +12,21 @@
 
     <!-- Content -->
     <div>
-        <p>Target URL : </p>
-        <input type="text" id="target_url">
+        <p>Target URL : 
+          <input type="text" id="target_url">
+        </p>
 
-        <p>Scrape Frequency : </p>
-        <input type="text" id="scrape_frequency">
+        <p>Scrape Frequency : 
+          <select id="scrape_frequency">
+            <option value="daily"> Daily </option>
+            <option value="weekly"> Weekly </option>
+            <option value="monthly"> Monthly </option>
+          </select>
+        </p>
+
+        <p>Recursive Scraping?
+         <input type="checkbox" id="recursive_scraping">
+        </p>
 
         <!-- on click, run the scrape program -->
         <button 

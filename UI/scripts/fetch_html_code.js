@@ -2,6 +2,13 @@
     // Needs to have only valid dates as an input
     // Needs to run a new scan at that new date
     // Would be REALLY IMPORTANT for the program to tell me WHERE the difference is
+        // this might be helpful : https://github.com/jonTrent/PatienceDiff
+    // set dates for when web gnome needs to scrape, and for which websites
+    // Also needs to determine if there are any other html files linked, and scrape those too
+        // basically, create a spider
+        // determine the root html page
+        // then build the rest of the folders out of that root page
+
 
 
 async function fetch_html_code(URL, scrape_frequency)
@@ -24,8 +31,6 @@ async function fetch_html_code(URL, scrape_frequency)
     create_timestamp_file(folder_path)
 }
 
-// FUTURE BUG!! 
-// Will need to compare a file if the file already exists
 function create_file(URL, data)
 {    
     let URL_name = 'naming_fail'
@@ -60,7 +65,7 @@ function create_file(URL, data)
         
         const content = data
         const format = 'UTF-8'
-        const file_path = folder_path + "/" + 'scrape_2'
+        const file_path = folder_path + "/" + 'scrape_2.txt'
         window.nodeFunctions.createFile(file_path, content, format)
 
         console.log('Gnome detected that this file already exists')
@@ -74,7 +79,7 @@ function create_file(URL, data)
         
         const content = data
         const format = 'UTF-8'
-        const file_path = folder_path + "/" + 'scrape_1'
+        const file_path = folder_path + "/" + 'scrape_1.txt'
         window.nodeFunctions.createFile(file_path, content, format)
 
         console.log("html code has been fetched");
@@ -86,7 +91,7 @@ function create_date_file(folder_path, scrape_frequency)
 {
     const content = scrape_frequency
     const format = 'UTF-8'
-    const file_path = folder_path + "/" + 'target_date'
+    const file_path = folder_path + "/" + 'scrape_frequency'
     window.nodeFunctions.createFile(file_path, content, format)
 }
 
@@ -103,7 +108,6 @@ function create_timestamp_file(folder_path)
     const file_path = folder_path + "/" + 'date_created'
     window.nodeFunctions.createFile(file_path, content, format)
 }
-
 
 function compare_scrapes(folder_path)
 {
@@ -123,3 +127,4 @@ function compare_scrapes(folder_path)
         console.log('THERE HAS BEEN A CHANGE BETWEEN THE SCRAPES')
     }
 }
+
