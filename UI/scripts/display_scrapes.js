@@ -25,10 +25,33 @@ function makeUI(path, table)
         const scrape_path = path + '/' + file_name + '/scrape_frequency'
         scrape_frequency.textContent = window.nodeFunctions.readFile(scrape_path)
 
+        // Scraped Previously
+        let scraped_previously = document.createElement('td')
+        const is_scraped_path = path + '/' + file_name + '/scrape_2.txt'
+        if(window.nodeFunctions.existsSync(is_scraped_path))
+        {
+            scraped_previously.textContent = 'True'
+        }
+        else if (!window.nodeFunctions.existsSync(is_scraped_path))
+        {
+            scraped_previously.textContent = 'False'
+        }
+        else
+        {
+            scraped_previously.textContent = 'Error'
+        }
+        
+
+        // Scrape Recursively
+        let scraped_recursively = document.createElement('td')
+        scraped_recursively.textContent = 'To be added soon'
+
         let row = document.createElement('tr') // create a row
             row.appendChild(number)
             row.appendChild(name)
             row.appendChild(scrape_frequency)
+            row.appendChild(scraped_previously)
+            row.appendChild(scraped_recursively)
         table.appendChild(row) // add the row to the table
     }
 }

@@ -36,12 +36,27 @@
           Scrape
         </button>
 
+        <p> Hobart Brothers</p>
+        <p id="products"> https://www.hobartbrothers.com/products/?_paged= </p>
+        <p id="number_of_pages"> 2 </p>
+
+ 
+        <button 
+          type="button" 
+          id="buttonExecute" 
+          onclick="hobart_brothers(products.value, number_of_pages.value)">
+          Jacob Script
+        </button>
+
     </div>
     <!-- scraping  -->
     <script src="./scripts/fetch_html_code.js"></script> 
 
     <!-- builds the nav bar -->
     <script src="./scripts/fetch_navigation.js"></script>
+
+    <!-- Jacob's Script -->
+    <script src="./scripts/jacob_script.js"></script>
   </body>
 </html>
     

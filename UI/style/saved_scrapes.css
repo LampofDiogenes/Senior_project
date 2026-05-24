@@ -2,11 +2,12 @@
     border-style : solid;
     border-color : black;
     border-width: 5px;
+    border-collapse: collapse;
+    width : 100%;
 }
 
 td {
     border-style : solid;
     border-color : black;
     border-width : 1 px;
-    border-collapse: collapse;
 }
