@@ -1,21 +1,5 @@
-// have each products page be a target
-// 	- in each products page, add each product as a target
-// 	- for each target:
-// 		- take down all the information in 'available-products'
-// 		- record it for the next scrape
-// 		- basically just copy / paste anything between <td> and </td>
 
-// for (let i=1; i < 10; i++) : 
-// 	- target_url = 'https://www.hobartbrothers.com/products/?paged=' + i
-	
-// 	for (let x=1; x < table.length; x++)
-// 	- product = 'fwpl-result r' + x
-// 		- find href in this section
-
-// 	- table id='available-products'
-		// take all <td> from this
-		// store this information
-
+// Goes through each page where product urls are mentioned
 async function hobart_brothers(
     base_URL = 'https://www.hobartbrothers.com/products/?_paged=',
     number_of_pages = 9
@@ -39,10 +23,8 @@ async function hobart_brothers(
     } 
 }
 
-// need to find the product itself:
-// make a for loop, finding each thing having "'fwpl-result r' + x"
-// this finds the product itself
-// go to that URL 
+// in the page where product urls are mentioned:
+// pulls the product itself out
 async function grab_individual_products(product_page, hobart_path)
 {
     // since the html should return as a string,
@@ -89,6 +71,7 @@ async function grab_individual_products(product_page, hobart_path)
 }
 
 // WARNING! WILL OVERWRITE PREVIOUS SCRAPES CURRENTLY!!!
+// grabs the table from the product
 async function grab_table_from_product(
     URL,
     product_path,
@@ -139,7 +122,7 @@ async function grab_table_from_product(
         window.nodeFunctions.createFile(product_content, table, 'utf-8')
 }
 
-
+// Performs the actual scrape
 async function load_page(URL)
 {
     // let response = await fetch(URL);
