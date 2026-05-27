@@ -6,26 +6,42 @@ async function hobart_brothers(
 )
 {
     number_of_pages += 1 // so it counts correctly
-    for (let i=1; i < number_of_pages; i++)
-    {
-        let URL = base_URL + i
-        let product_page = await load_page(URL)
+    let hobart_path = './UI/scrapes/hobartbrothers'
+    
+    // for (let i=1; i < number_of_pages; i++)
+    // {
+    //     let URL = base_URL + i
+    //     let product_page = await load_page(URL)
+        
+    //     // create a folder for hobart brothers in the scrapes folder
+    //     if (!window.nodeFunctions.existsSync(hobart_path))
+    //     {
+    //         window.nodeFunctions.mkdirSync(hobart_path)
+    //     }
 
-        // create a folder for hobart brothers in the scrapes folder
-        let hobart_path = './UI/scrapes/hobartbrothers'
-        if (!window.nodeFunctions.existsSync(hobart_path))
-        {
-            window.nodeFunctions.mkdirSync(hobart_path)
-        }
+    //     // run page function
+    //     await grab_products_from_page(product_page, hobart_path)
+    // } 
 
-        console.log('function hobart brothers has run')
-        grab_individual_products(product_page, hobart_path)
-    } 
+    let date_address = hobart_path + '/date_created'
+    let content = new Date()
+    let date_content = content.toString()
+    window.nodeFunctions.createFile(date_address, date_content, 'utf-8')
+
+    
+    let scrape1_address = hobart_path + '/scrape_1.txt'
+    let scrape1_content = base_URL
+    window.nodeFunctions.createFile(scrape1_address, scrape1_content, 'utf-8')
+
+    let frequency_address = hobart_path + '/scrape_frequency'
+    let frequency_content = 'Daily'
+    window.nodeFunctions.createFile(frequency_address, frequency_content, 'utf-8')
+
 }
 
 // in the page where product urls are mentioned:
 // pulls the product itself out
-async function grab_individual_products(product_page, hobart_path)
+async function grab_products_from_page(product_page, hobart_path)
 {
     // since the html should return as a string,
     // split everything into words, and put them in an array

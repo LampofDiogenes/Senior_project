@@ -98,13 +98,9 @@ function create_date_file(folder_path, scrape_frequency)
 function create_timestamp_file(folder_path)
 {
     const today = new Date()
-    const year = today.getFullYear()
-    const month = today.getMonth()
-    const day = today.getDate()
-
-
-    const content = month + '/' + day + '/' + year
-    const format = 'UTF-8'
+    const content = today.toString()
+    
+    const format = 'utf-8'
     const file_path = folder_path + "/" + 'date_created'
     window.nodeFunctions.createFile(file_path, content, format)
 }
