@@ -15,17 +15,12 @@
         <p>Target URL : 
           <input type="text" id="target_url">
         </p>
-
         <p>Scrape Frequency : 
           <select id="scrape_frequency">
             <option value="daily"> Daily </option>
             <option value="weekly"> Weekly </option>
             <option value="monthly"> Monthly </option>
           </select>
-        </p>
-
-        <p>Recursive Scraping?
-         <input type="checkbox" id="recursive_scraping">
         </p>
 
         <!-- on click, run the scrape program -->
@@ -38,16 +33,12 @@
 
         <p> Hobart Brothers</p>
         <p id="products"> https://www.hobartbrothers.com/products/?_paged= </p>
-        <p id="number_of_pages"> 2 </p>
-
- 
         <button 
-          type="button" 
           id="buttonExecute" 
           onclick="hobart_brothers(products.value, number_of_pages.value)">
           Jacob Script
         </button>
-
+          
     </div>
     <!-- scraping  -->
     <script src="./scripts/fetch_html_code.js"></script> 
@@ -57,6 +48,9 @@
 
     <!-- Jacob's Script -->
     <script src="./scripts/jacob_script.js"></script>
+
+    <!-- testing date -->
+     <script src="./scripts/determine_date.js"></script>
   </body>
 </html>
     
