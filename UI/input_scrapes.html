@@ -24,20 +24,16 @@
         </p>
 
         <!-- on click, run the scrape program -->
-        <button 
-          type="button" 
-          id="buttonExecute" 
-          onclick="fetch_html_code(target_url.value, scrape_frequency.value)">
-          Scrape
-        </button>
 
         <p> Hobart Brothers</p>
-        <p id="products"> https://www.hobartbrothers.com/products/?_paged= </p>
+        <p id="products">  </p>
         <button 
           id="buttonExecute" 
-          onclick="hobart_brothers(products.value, number_of_pages.value)">
+          onclick="hobart_brothers('loading_page')">
           Jacob Script
         </button>
+
+        <p id="loading_page"></p>
           
     </div>
     <!-- scraping  -->
@@ -48,9 +44,6 @@
 
     <!-- Jacob's Script -->
     <script src="./scripts/jacob_script.js"></script>
-
-    <!-- testing date -->
-     <script src="./scripts/determine_date.js"></script>
   </body>
 </html>
     

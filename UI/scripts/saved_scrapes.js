@@ -1,5 +1,9 @@
 
-//
+// GOAL : 
+// find the data in each of the subfolders (website_name)
+// read the data, and compare the most recent date to the next most recent date
+// determine if any change occured between those two dates
+
 function makeUI(folder_path, dom_target) // asks for the folder to take info from, and place to put information into
 {
     const folder = window.nodeFunctions.readdirSync(folder_path)
@@ -8,6 +12,22 @@ function makeUI(folder_path, dom_target) // asks for the folder to take info fro
     for (let i = 0; i < folder.length; i++)
     {
         website_folder = folder[i] // find the file
+
+        for (let j=0; j < website_folder.length; j++)
+        {
+            let product_folder = website_folder[j]
+            
+            for (let x=0; x < product_folder.length; x++) // this is for comparing scrapes to see if anything is different
+            {
+                if (!old_data.exists) // check to see if old_data has been declared
+                {
+                    let old_data = ''
+                }
+                let specific_scrape_instance = product_folder[x]
+                
+                let new_scrape_data = window.nodeFunctions.readFile(specific_scrape_instance)
+            }
+        }
 
         const number = get_number(i)
         const name = get_file_name(website_folder)
@@ -22,19 +42,8 @@ function makeUI(folder_path, dom_target) // asks for the folder to take info fro
             row.appendChild(scrape_frequency)
             row.appendChild(last_scrape_date)
             row.appendChild(next_scrape_date)
-            // row.appendChild(Change_occured?)
+            // row.appendChild(did_change_occur)
         dom_target.appendChild(row) // add the row to the table
-    }
-}
-
-function makeUI(folder_path, dom_target) // asks for the folder to take info from, and place to put information into
-{
-    const folder = window.nodeFunctions.readdirSync(folder_path)
-    let website_folder = 'error'
-
-    for (let i = 0; i < folder.length; i++)
-    {
-        website_folder = folder[i] // find the file
     }
 }
 

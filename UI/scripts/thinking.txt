@@ -12,9 +12,11 @@
         // when to scrape again (recurring)
 
 // TO DO:
-    // needs to be able to determine the next time that web gnome will scrape AT SCRAPING
-    // change the scrapes to instead be folders, which holds:
-        // date made
-        // date when to scrape again
-        // data from most current scrape
-        // data from previous to last current scrape
+    // change the table to have the home website mentioned and if a change has occured
+    // change the table to include ALL the scrapes included, not just presenting the home scrape
+
+    // on saved_scrapes.js 
+        // make it so that it can compare different txt files
+        // make it so that it can compare the dates of each scrape (the scrapes name)
+        // you stopped at a point where you are working through comparing an old_scrape to a new_scrape,
+            // but are not sure how to store the data of the old scrape

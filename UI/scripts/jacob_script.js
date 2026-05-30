@@ -1,42 +1,44 @@
 
 // Goes through each page where product urls are mentioned
-async function hobart_brothers(
-    base_URL = 'https://www.hobartbrothers.com/products/?_paged=',
-    number_of_pages = 9
-)
+async function hobart_brothers( frontend_loading_tag )
 {
-    number_of_pages += 1 // so it counts correctly
-    let hobart_path = './UI/scrapes/hobartbrothers'
-    
-    // for (let i=1; i < number_of_pages; i++)
-    // {
-    //     let URL = base_URL + i
-    //     let product_page = await load_page(URL)
-        
-    //     // create a folder for hobart brothers in the scrapes folder
-    //     if (!window.nodeFunctions.existsSync(hobart_path))
-    //     {
-    //         window.nodeFunctions.mkdirSync(hobart_path)
-    //     }
 
-    //     // run page function
-    //     await grab_products_from_page(product_page, hobart_path)
-    // } 
+    const base_URL = 'https://www.hobartbrothers.com/products/?_paged='
+    const number_of_pages = 9 + 1
+    const loading_tag = document.getElementById(frontend_loading_tag)
+    const hobart_path = './UI/scrapes/hobartbrothers'
+
+    loading_tag.textContent = 'Loading. Please do not close the page.'
+    
+    for (let i=1; i < number_of_pages; i++)
+    {
+        let URL = base_URL + i
+        let product_page = await load_page(URL)
+        
+        // create a folder for hobart brothers in the scrapes folder
+        if (!window.nodeFunctions.existsSync(hobart_path))
+        {
+            window.nodeFunctions.mkdirSync(hobart_path)
+        }
+
+        // run page function
+        await grab_products_from_page(product_page, hobart_path)
+    } 
 
     let date_address = hobart_path + '/date_created'
-    let content = new Date()
-    let date_content = content.toString()
-    window.nodeFunctions.createFile(date_address, date_content, 'utf-8')
-
+    let today = new Date()
+    let date_content = 
+        (next_date.getMonth() + 1) + '/' 
+        + next_date.getDate() + '/' 
+        + next_date.getFullYear()
     
-    let scrape1_address = hobart_path + '/scrape_1.txt'
-    let scrape1_content = base_URL
-    window.nodeFunctions.createFile(scrape1_address, scrape1_content, 'utf-8')
+    window.nodeFunctions.createFile(date_address, date_content, 'utf-8')
 
     let frequency_address = hobart_path + '/scrape_frequency'
     let frequency_content = 'Daily'
     window.nodeFunctions.createFile(frequency_address, frequency_content, 'utf-8')
 
+    loading_tag.textContent = 'Loaded! '
 }
 
 // in the page where product urls are mentioned:
@@ -134,7 +136,9 @@ async function grab_table_from_product(
 
         // create a file in the product's folder
         // WARNING : will overwrite the previous scrape currently
-        let product_content = product_path + '/table'
+
+        const scrape_date = get_scrape_date()
+        const product_content = product_path + '/' + scrape_date
         window.nodeFunctions.createFile(product_content, table, 'utf-8')
 }
 
@@ -158,3 +162,15 @@ async function load_page(URL)
     let response_page = await response.text();
     return response_page
 }
+
+function get_scrape_date()
+{
+
+  const next_date = new Date()
+  const next_scrape_date = 
+    (next_date.getMonth() + 1) + '-' 
+    + next_date.getDate() + '-' 
+    + next_date.getFullYear()
+
+  return next_scrape_date
+};
