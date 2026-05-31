@@ -11,39 +11,40 @@ function makeUI(folder_path, dom_target) // asks for the folder to take info fro
 
     for (let i = 0; i < folder.length; i++)
     {
-        website_folder = folder[i] // find the file
+        website_folder = folder_path + '/' + folder[i] // find the file
+        console.log('website folder : ', website_folder)
 
+        let website_path = window.nodeFunctions.readdirSync(website_folder)
         for (let j=0; j < website_folder.length; j++)
         {
-            let product_folder = website_folder[j]
+            let product_folder = website_folder + '/' + website_path[j]
+            product_folder = window.nodeFunctions.readdirSync(product_folder)
             
             for (let x=0; x < product_folder.length; x++) // this is for comparing scrapes to see if anything is different
             {
-                if (!old_data.exists) // check to see if old_data has been declared
-                {
-                    let old_data = ''
-                }
-                let specific_scrape_instance = product_folder[x]
+                let product = product_folder[x]
+
+
+                const number = get_number(j)
+                const name = get_file_name(product)
+                const scrape_frequency = get_scrape_frequency(folder_path, product)
+                const last_scrape_date = get_last_scrape_date(folder_path, product)
+                const next_scrape_date = get_next_scrape_date()
+
+                let row = document.createElement('tr') // create a row
+                    row.appendChild(number)
+                    // row.appendChild(Parent_website)
+                    row.appendChild(name)
+                    row.appendChild(scrape_frequency)
+                    row.appendChild(last_scrape_date)
+                    row.appendChild(next_scrape_date)
+                    // row.appendChild(did_change_occur)
+                dom_target.appendChild(row) // add the row to the table
                 
+            
                 let new_scrape_data = window.nodeFunctions.readFile(specific_scrape_instance)
             }
         }
-
-        const number = get_number(i)
-        const name = get_file_name(website_folder)
-        const scrape_frequency = get_scrape_frequency(folder_path, website_folder)
-        const last_scrape_date = get_last_scrape_date(folder_path, website_folder)
-        const next_scrape_date = get_next_scrape_date()
-
-        let row = document.createElement('tr') // create a row
-            row.appendChild(number)
-            // row.appendChild(Parent_website)
-            row.appendChild(name)
-            row.appendChild(scrape_frequency)
-            row.appendChild(last_scrape_date)
-            row.appendChild(next_scrape_date)
-            // row.appendChild(did_change_occur)
-        dom_target.appendChild(row) // add the row to the table
     }
 }
 
