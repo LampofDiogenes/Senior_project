@@ -7,46 +7,32 @@
 function makeUI(folder_path, dom_target) // asks for the folder to take info from, and place to put information into
 {
     const folder = window.nodeFunctions.readdirSync(folder_path)
-    let website_folder = 'error'
-
-    for (let i = 0; i < folder.length; i++)
+    website_path = folder_path + '/' + 'hobartbrothers'
+    website_folder = window.nodeFunctions.readdirSync(website_path)
+    
+    for (let j=0; j < website_folder.length; j++)
     {
-        website_folder = folder_path + '/' + folder[i] // find the file
-        console.log('website folder : ', website_folder)
-
-        let website_path = window.nodeFunctions.readdirSync(website_folder)
-        for (let j=0; j < website_folder.length; j++)
-        {
-            let product_folder = website_folder + '/' + website_path[j]
-            product_folder = window.nodeFunctions.readdirSync(product_folder)
-            
-            for (let x=0; x < product_folder.length; x++) // this is for comparing scrapes to see if anything is different
-            {
-                let product = product_folder[x]
+        const product_name = website_folder[j]
+        const product_path = website_path + '/' + product_name
 
 
-                const number = get_number(j)
-                const name = get_file_name(product)
-                const scrape_frequency = get_scrape_frequency(folder_path, product)
-                const last_scrape_date = get_last_scrape_date(folder_path, product)
-                const next_scrape_date = get_next_scrape_date()
+        const number = get_number(j)
+        const name = get_file_name(product_name)
+        const last_scrape_date = get_last_scrape_date(product_path, product_name)
+        const next_scrape_date = get_next_scrape_date()
+        const status = compare_scrapes(product_path)
+        // const scrape_frequency = get_scrape_frequency(folder_path, product_name)
 
-                let row = document.createElement('tr') // create a row
-                    row.appendChild(number)
-                    // row.appendChild(Parent_website)
-                    row.appendChild(name)
-                    row.appendChild(scrape_frequency)
-                    row.appendChild(last_scrape_date)
-                    row.appendChild(next_scrape_date)
-                    // row.appendChild(did_change_occur)
-                dom_target.appendChild(row) // add the row to the table
-                
-            
-                let new_scrape_data = window.nodeFunctions.readFile(specific_scrape_instance)
-            }
-        }
+        let row = document.createElement('tr') // create a row
+            row.appendChild(number)
+            row.appendChild(name)
+            row.appendChild(last_scrape_date)
+            row.appendChild(next_scrape_date)
+            row.appendChild(status)
+        dom_target.appendChild(row) // add the row to the table
     }
 }
+
 
 function get_number(i)
 {
@@ -74,24 +60,65 @@ function get_scrape_frequency(path, file_name)
 
     return scrape_frequency
 }
-function get_last_scrape_date(path, file_name)
+function get_last_scrape_date(product_path, file_name)
 {
     let last_scrape_date = document.createElement('td')
-    const date_path = path + '/' + file_name + '/date_created'
+    let date_path = product_path + '/scrape2_date'
+
+    console.log(date_path)
+
+    // if (!window.nodeFunctions.existsSync(date_path))
+    // {
+    //     date_path = product_path + '/scrape1_date'
+    // }
     if(window.nodeFunctions.existsSync(date_path))
     {
         last_scrape_date.textContent = window.nodeFunctions.readFile(date_path)
     }
-    else if (!window.nodeFunctions.existsSync(date_path))
-    {
-        last_scrape_date.textContent = 'Not Previously Scraped'
-    }
-    else
-    {
-        last_scrape_date.textContent = 'Error'
-    }
+    // else if (!window.nodeFunctions.existsSync(date_path))
+    // {
+    //     last_scrape_date.textContent = 'Not Previously Scraped'
+    // }
+    // else
+    // {
+    //     last_scrape_date.textContent = 'Error'
+    // }
 
     return last_scrape_date
+}
+function compare_scrapes(product_path)
+{
+    let scrape_comparison = document.createElement('td')
+    let scrape1 = product_path + '/scrape1'
+    let scrape2 = product_path + '/scrape2'
+
+    if (window.nodeFunctions.existsSync(scrape1) && 
+        window.nodeFunctions.existsSync(scrape2) )
+        {
+            let scrape1_data = window.nodeFunctions.readFile(scrape1)
+            let scrape2_data = window.nodeFunctions.readFile(scrape2)
+
+            if (scrape1_data === scrape2_data)
+            {
+                scrape_comparison.textContent = 'unchanged'
+            }
+            else
+            {
+                scrape_comparison.textContent = 'change detected'
+            }
+        }
+    else if (window.nodeFunctions.existsSync(scrape1))
+    {
+        scrape_comparison.textContent = 'only one scrape detected'
+    }
+
+    else
+    {
+        scrape_comparison.textContent = 'error'
+    }
+
+    return scrape_comparison
+
 }
 
 // this gets inaccurate when looking past 2 years, but works pretty well within 1 year

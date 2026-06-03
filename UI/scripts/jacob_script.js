@@ -25,19 +25,6 @@ async function hobart_brothers( frontend_loading_tag )
         await grab_products_from_page(product_page, hobart_path)
     } 
 
-    let date_address = hobart_path + '/date_created'
-    let today = new Date()
-    let date_content = 
-        (next_date.getMonth() + 1) + '/' 
-        + next_date.getDate() + '/' 
-        + next_date.getFullYear()
-    
-    window.nodeFunctions.createFile(date_address, date_content, 'utf-8')
-
-    let frequency_address = hobart_path + '/scrape_frequency'
-    let frequency_content = 'Daily'
-    window.nodeFunctions.createFile(frequency_address, frequency_content, 'utf-8')
-
     loading_tag.textContent = 'Loaded! '
 }
 
@@ -68,28 +55,33 @@ async function grab_products_from_page(product_page, hobart_path)
             // string should now have all data between href=" ... "
             // target url is the ... now
             target_url = target_url.slice(0, new_url_end)
-            found_urls.push(target_url)
 
-            console.log(target_url)
-
-
-            // create a folder for the product itself
-            let product_name = target_url.replace(url_focus, "") 
-            product_name = product_name.replace('https://', "")
-            let product_path = hobart_path + product_name
-
-            if (!window.nodeFunctions.existsSync(product_path))
+            if (found_urls.includes(target_url) === false )
             {
-                window.nodeFunctions.mkdirSync(product_path)
+                found_urls.push(target_url)
             }
-
-            await grab_table_from_product(target_url, product_path)
+            console.log(target_url)
         }
     }
+
+    for (let x = 0; x < found_urls.length; x++)
+    {
+        // create a folder for the product itself
+        target_url = found_urls[x]
+
+        let product_name = target_url.replace(url_focus, "") 
+        product_name = product_name.replace('https://', "")
+        let product_path = hobart_path + product_name
+
+        if (!window.nodeFunctions.existsSync(product_path))
+        {
+            window.nodeFunctions.mkdirSync(product_path)
+        }
+        await grab_table_from_product(target_url, product_path)
+    }
+    
 }
 
-// WARNING! WILL OVERWRITE PREVIOUS SCRAPES CURRENTLY!!!
-// grabs the table from the product
 async function grab_table_from_product(
     URL,
     product_path,
@@ -132,28 +124,25 @@ async function grab_table_from_product(
             let end_index = response_page.indexOf(table_end) + 7 // adding /table back in
 
             table = response_page.slice(start_index, end_index)
+
+            createFiles(product_path, table)
         }  
 
-        // create a file in the product's folder
-        // WARNING : will overwrite the previous scrape currently
 
-        const scrape_date = get_scrape_date()
-        const product_content = product_path + '/' + scrape_date
-        window.nodeFunctions.createFile(product_content, table, 'utf-8')
+        // New method
+        
+        
+
+
+        // older method
+        // const scrape_date = get_scrape_date()
+        // const product_content = product_path + '/' + scrape_date
+        // window.nodeFunctions.createFile(product_content, table, 'utf-8')
 }
 
 // Performs the actual scrape
 async function load_page(URL)
-{
-    // let response = await fetch(URL);
-    // console.log(response);
-    // if (!response.ok){
-    //     throw new Error(`Response status: ${response.status}`);
-    // }    
-    // let response_page = await response.text()
-    // return response_page
-
-    
+{    
     let response = await fetch(URL);
     console.log(response); 
     if (!response.ok){
@@ -174,3 +163,66 @@ function get_scrape_date()
 
   return next_scrape_date
 };
+
+function createFiles(product_path, product_content)
+{
+
+    const scrape_date = get_scrape_date()
+    const scrape1 = product_path + '/' + 'scrape1'
+    const scrape2 = product_path + '/' + 'scrape2'
+
+    // if the information is not stored yet
+    if (!window.nodeFunctions.existsSync(scrape1) && !window.nodeFunctions.existsSync(scrape2))
+    {
+
+        console.log(product_path + ' has not been scraped yet')
+        const scrape1_date_path = product_path + '/' + 'scrape1_date'
+
+        window.nodeFunctions.createFile(scrape1_date_path, scrape_date, 'utf-8')
+        window.nodeFunctions.createFile(scrape1, product_content, 'utf-8')
+        return
+    }
+
+    // if the website has been scraped previously
+    else if (window.nodeFunctions.existsSync(scrape1) && !window.nodeFunctions.existsSync(scrape2))
+    {
+
+        console.log(product_path + ' has been scraped once')
+
+        const scrape2_date_path = product_path + '/' + 'scrape2_date'
+
+        window.nodeFunctions.createFile(scrape2_date_path, scrape_date, 'utf-8')
+        window.nodeFunctions.createFile(scrape2, product_content, 'utf-8')
+        return
+    }
+
+    // if everything is set up correctly
+    else if (window.nodeFunctions.existsSync(scrape1) && window.nodeFunctions.existsSync(scrape2))
+    {
+
+        console.log(product_path + ' has been scraped more than once')
+
+        // set the scrape2 file to be scrape1
+        const rewrtite_scrape1 = window.nodeFunctions.readFile(scrape2)
+        window.nodeFunctions.createFile(scrape1, rewrtite_scrape1, 'utf-8')
+
+        // do the same with the date
+        const scrape1_date_path = product_path + '/' + 'scrape1_date'
+        const scrape2_date_path = product_path + '/' + 'scrape2_date'
+        const rewrtite_scrape1_date = window.nodeFunctions.readFile(scrape2_date_path)
+        window.nodeFunctions.createFile(scrape1_date_path, rewrtite_scrape1_date, 'utf-8')
+
+        // send the new scrape data into scrape2
+        window.nodeFunctions.createFile(scrape2, product_content, 'utf-8')
+        window.nodeFunctions.createFile(scrape2_date_path, scrape_date, 'utf-8')
+        return
+    }
+
+
+    else
+    {
+        console.error('createFiles has failed')
+    }
+    
+
+}
