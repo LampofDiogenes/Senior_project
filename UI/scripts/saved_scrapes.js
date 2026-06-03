@@ -65,24 +65,22 @@ function get_last_scrape_date(product_path, file_name)
     let last_scrape_date = document.createElement('td')
     let date_path = product_path + '/scrape2_date'
 
-    console.log(date_path)
-
-    // if (!window.nodeFunctions.existsSync(date_path))
-    // {
-    //     date_path = product_path + '/scrape1_date'
-    // }
+    if (!window.nodeFunctions.existsSync(date_path))
+    {
+        date_path = product_path + '/scrape1_date'
+    }
     if(window.nodeFunctions.existsSync(date_path))
     {
         last_scrape_date.textContent = window.nodeFunctions.readFile(date_path)
     }
-    // else if (!window.nodeFunctions.existsSync(date_path))
-    // {
-    //     last_scrape_date.textContent = 'Not Previously Scraped'
-    // }
-    // else
-    // {
-    //     last_scrape_date.textContent = 'Error'
-    // }
+    else if (!window.nodeFunctions.existsSync(date_path))
+    {
+        last_scrape_date.textContent = 'Not Previously Scraped'
+    }
+    else
+    {
+        last_scrape_date.textContent = 'Error'
+    }
 
     return last_scrape_date
 }
