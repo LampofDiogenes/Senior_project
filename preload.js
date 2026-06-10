@@ -1,7 +1,6 @@
 const { contextBridge } = require('electron');
 const fs  = require('fs');
-
-console.log("preloader started")
+const nodemailer = require('nodemailer');
 
 function removeFile(filePath) {
   try {
@@ -15,7 +14,6 @@ function removeFile(filePath) {
     }
   }
 }
-
 
 try {
   contextBridge.exposeInMainWorld(
@@ -34,8 +32,18 @@ try {
         deleteFile : (filePath) => removeFile(filePath),
         readFile: (p) => fs.readFileSync(p, 'utf-8')
 
-    });
-} catch (err) {
-  console.error('Context Bridge error:', err);
-}
-console.log("preload loaded")
+    },
+  'nodemailer',
+    {
+      createTransport : (args) => nodemailer.createTransport(args),
+      send : (transport, from, to, subject, text) => transport.sendMail(
+      {
+        from: from,
+        to: to,
+        subject: subject,
+        text: text,
+      })
+    }
+)}
+catch
+{console.log('issue in preloader')}

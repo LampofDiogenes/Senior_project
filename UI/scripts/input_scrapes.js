@@ -1,5 +1,9 @@
 
-// Goes through each page where product urls are mentioned
+// takes home url
+// finds 9 sub-urls beneath it
+// looks for sub-sub-urls
+// takes only the sub-sub-urls that have the sub-url inside it
+// if that sub-sub-url has a table, it records it
 async function hobart_brothers( frontend_loading_tag, product_page_number, number_loaded_tag )
 {
 

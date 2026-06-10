@@ -1,5 +1,3 @@
-
-// GOAL : 
 // find the data in each of the subfolders (website_name)
 // read the data, and compare the most recent date to the next most recent date
 // determine if any change occured between those two dates

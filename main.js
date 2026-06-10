@@ -1,5 +1,6 @@
 const { app, BrowserWindow } = require('electron/main')
 const path = require('node:path')
+const { session } = require('electron')
 
 const createWindow = () => {
   const win = new BrowserWindow({
@@ -14,7 +15,30 @@ const createWindow = () => {
   })
   win.loadFile('UI/index.html')
 }
-app.whenReady().then(() => {
-    console.log("the current directory is: ", __dirname)
-  createWindow()
+
+// app.whenReady().then(() => {
+//   createWindow()
+// })
+
+secure_startup()
+
+
+async function secure_startup()
+{
+  await app.whenReady().then(() => {
+    createWindow()
+  })
+
+  session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
+  callback({
+    responseHeaders: {
+      ...details.responseHeaders,
+      'Content-Security-Policy': [
+          '*'
+      ]
+    }
+  })
 })
+}
+
+
