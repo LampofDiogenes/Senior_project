@@ -1,28 +1,35 @@
 
 // Goes through each page where product urls are mentioned
-async function hobart_brothers( frontend_loading_tag )
+async function hobart_brothers( frontend_loading_tag, product_page_number, number_loaded_tag )
 {
 
-    const base_URL = 'https://www.hobartbrothers.com/products/?_paged='
-    const number_of_pages = 9 + 1
     const loading_tag = document.getElementById(frontend_loading_tag)
-    const hobart_path = './UI/scrapes/hobartbrothers'
+    const product_page_tag = document.getElementById(product_page_number)
+    const number_tag = document.getElementById(number_loaded_tag)
 
-    loading_tag.textContent = 'Loading. Please do not close the page.'
     
-    for (let i=1; i < number_of_pages; i++)
+    const base_URL = 'https://www.hobartbrothers.com/products/?_paged='
+    const hobart_path = './UI/scrapes/hobartbrothers'
+    const number_of_pages = 9
+
+    loading_tag.textContent = 'Loading. Please do not close  or navigate from the page.'
+    number_tag.textContent = 'Finding numer of pages to scrape...'
+    
+    
+    // create a folder for hobart brothers in the scrapes folder
+    if (!window.nodeFunctions.existsSync(hobart_path))
     {
+        window.nodeFunctions.mkdirSync(hobart_path)
+    }
+    for (let i=1; i <= number_of_pages; i++)
+    {
+        product_page_tag.textContent = 'product page ' + i + ' out of ' + number_of_pages
         let URL = base_URL + i
         let product_page = await load_page(URL)
-        
-        // create a folder for hobart brothers in the scrapes folder
-        if (!window.nodeFunctions.existsSync(hobart_path))
-        {
-            window.nodeFunctions.mkdirSync(hobart_path)
-        }
 
         // run page function
-        await grab_products_from_page(product_page, hobart_path)
+        await grab_products_from_page(product_page, hobart_path, number_tag)
+        
     } 
 
     loading_tag.textContent = 'Loaded! '
@@ -30,7 +37,7 @@ async function hobart_brothers( frontend_loading_tag )
 
 // in the page where product urls are mentioned:
 // pulls the product itself out
-async function grab_products_from_page(product_page, hobart_path)
+async function grab_products_from_page(product_page, hobart_path, number_tag)
 {
     // since the html should return as a string,
     // split everything into words, and put them in an array
@@ -60,12 +67,12 @@ async function grab_products_from_page(product_page, hobart_path)
             {
                 found_urls.push(target_url)
             }
-            console.log(target_url)
         }
     }
 
     for (let x = 0; x < found_urls.length; x++)
     {
+        
         // create a folder for the product itself
         target_url = found_urls[x]
 
@@ -78,6 +85,7 @@ async function grab_products_from_page(product_page, hobart_path)
             window.nodeFunctions.mkdirSync(product_path)
         }
         await grab_table_from_product(target_url, product_path)
+        number_tag.textContent = (x + 1) + ' out of ' + found_urls.length + ' scraped'
     }
     
 }
@@ -127,24 +135,13 @@ async function grab_table_from_product(
 
             createFiles(product_path, table)
         }  
-
-
-        // New method
-        
-        
-
-
-        // older method
-        // const scrape_date = get_scrape_date()
-        // const product_content = product_path + '/' + scrape_date
-        // window.nodeFunctions.createFile(product_content, table, 'utf-8')
 }
 
 // Performs the actual scrape
 async function load_page(URL)
 {    
     let response = await fetch(URL);
-    console.log(response); 
+    // console.log(response); 
     if (!response.ok){
         throw new Error(`Response status: ${response.status}`);
     }
@@ -154,7 +151,6 @@ async function load_page(URL)
 
 function get_scrape_date()
 {
-
   const next_date = new Date()
   const next_scrape_date = 
     (next_date.getMonth() + 1) + '-' 
@@ -170,38 +166,27 @@ function createFiles(product_path, product_content)
     const scrape_date = get_scrape_date()
     const scrape1 = product_path + '/' + 'scrape1'
     const scrape2 = product_path + '/' + 'scrape2'
-
     // if the information is not stored yet
     if (!window.nodeFunctions.existsSync(scrape1) && !window.nodeFunctions.existsSync(scrape2))
     {
-
-        console.log(product_path + ' has not been scraped yet')
         const scrape1_date_path = product_path + '/' + 'scrape1_date'
 
         window.nodeFunctions.createFile(scrape1_date_path, scrape_date, 'utf-8')
         window.nodeFunctions.createFile(scrape1, product_content, 'utf-8')
         return
     }
-
     // if the website has been scraped previously
     else if (window.nodeFunctions.existsSync(scrape1) && !window.nodeFunctions.existsSync(scrape2))
     {
-
-        console.log(product_path + ' has been scraped once')
-
         const scrape2_date_path = product_path + '/' + 'scrape2_date'
 
         window.nodeFunctions.createFile(scrape2_date_path, scrape_date, 'utf-8')
         window.nodeFunctions.createFile(scrape2, product_content, 'utf-8')
         return
     }
-
     // if everything is set up correctly
     else if (window.nodeFunctions.existsSync(scrape1) && window.nodeFunctions.existsSync(scrape2))
     {
-
-        console.log(product_path + ' has been scraped more than once')
-
         // set the scrape2 file to be scrape1
         const rewrtite_scrape1 = window.nodeFunctions.readFile(scrape2)
         window.nodeFunctions.createFile(scrape1, rewrtite_scrape1, 'utf-8')
@@ -217,12 +202,8 @@ function createFiles(product_path, product_content)
         window.nodeFunctions.createFile(scrape2_date_path, scrape_date, 'utf-8')
         return
     }
-
-
     else
     {
         console.error('createFiles has failed')
     }
-    
-
 }
