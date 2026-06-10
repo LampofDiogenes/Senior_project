@@ -26,13 +26,14 @@ try {
         existsSync : (p) => fs.existsSync(p),
         mkdirSync : (p) => fs.mkdirSync(p),
 
-        // found in display_scrapes.js
+        // found in saved_scrapes.js
         readdir : (dir) => fs.readdir(dir, (err, files)),
         readdirSync : (dir) => fs.readdirSync(dir),
 
         // might be important later
         deleteFile : (filePath) => removeFile(filePath),
         readFile: (p) => fs.readFileSync(p, 'utf-8')
+
     });
 } catch (err) {
   console.error('Context Bridge error:', err);
