@@ -15,6 +15,32 @@ function removeFile(filePath) {
   }
 }
 
+function send_mail(from, to, subject, text)
+{
+    const transporter = nodemailer.createTransport({
+      sendmail: true,
+      path: "/usr/sbin/sendmail",
+    });
+
+    transporter.sendMail(
+      {
+        from: from,
+        to: to,
+        subject: subject,
+        text: text,
+      },
+      (err, info) => {
+        if (err) {
+          console.error(err);
+          return;
+        }
+        console.log(info.envelope);
+        console.log(info.messageId);
+      }
+    )
+    console.log('email sent!')
+}
+
 try {
   contextBridge.exposeInMainWorld(
     'nodeFunctions', 
@@ -30,20 +56,16 @@ try {
 
         // might be important later
         deleteFile : (filePath) => removeFile(filePath),
-        readFile: (p) => fs.readFileSync(p, 'utf-8')
+        readFile: (p) => fs.readFileSync(p, 'utf-8'),
+        sendmail : (from, to, subject, text) => send_mail(from, to, subject, text)
 
     },
-  'nodemailer',
+  'nodemail',
     {
-      createTransport : (args) => nodemailer.createTransport(args),
-      send : (transport, from, to, subject, text) => transport.sendMail(
-      {
-        from: from,
-        to: to,
-        subject: subject,
-        text: text,
-      })
+      
     }
 )}
 catch
 {console.log('issue in preloader')}
+
+console.log('preloader loaded')

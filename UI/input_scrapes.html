@@ -31,6 +31,24 @@
           Scrape Website
         </button>
 
+        <p> Send Email </p>
+        <!-- <p id="from" value="web-gnome-support@protonmail.com">  </p>
+        <p id="to" value="wannabdiogenes@gmail.com">  </p>
+        <p id="subject" value="Sending from Web Gnome">  </p>
+        <p id="text" value="If you are seeing this, it has worked!"> </p> -->
+
+        <select id="from">    <option value="web-gnome-support@protonmail.com"> from web-gnome</option> </select>
+        <select id="to">      <option value="wannabdiogenes@gmail.com"> to (me) </option></select>
+        <select id="subject"> <option value="Sending from Web Gnome"> subject </option></select>
+        <select id="text">    <option value="If you are seeing this, it has worked!"> text </option></select>
+        <button
+        onclick="recordData(
+          document.getElementById('from').value, 
+          document.getElementById('to').value,
+          document.getElementById('subject').value,
+          document.getElementById('text').value
+          )"> Send Mail</button>
+
         <p id="loading_page"></p>
         <p id="product_page_number"></p>
         <p id="product_number_loaded"></p>
@@ -40,8 +58,11 @@
     <!-- builds the nav bar -->
     <script src="./scripts/fetch_navigation.js"></script>
 
-    <!-- Jacob's Script -->
+    <!-- scrapes websites -->
     <script src="./scripts/input_scrapes.js"></script>
+
+    <!-- sends emails -->
+    <script src="./scripts/send_email.js"></script>
   </body>
 </html>
     
