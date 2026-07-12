@@ -1,6 +1,6 @@
 const { contextBridge } = require('electron');
 const fs  = require('fs');
-const nodemailer = require('nodemailer');
+const path = require('node:path');
 
 function removeFile(filePath) {
   try {
@@ -15,30 +15,9 @@ function removeFile(filePath) {
   }
 }
 
-function send_mail(from, to, subject, text)
+function setPath()
 {
-    const transporter = nodemailer.createTransport({
-      sendmail: true,
-      path: "/usr/sbin/sendmail",
-    });
 
-    transporter.sendMail(
-      {
-        from: from,
-        to: to,
-        subject: subject,
-        text: text,
-      },
-      (err, info) => {
-        if (err) {
-          console.error(err);
-          return;
-        }
-        console.log(info.envelope);
-        console.log(info.messageId);
-      }
-    )
-    console.log('email sent!')
 }
 
 try {
@@ -46,6 +25,7 @@ try {
     'nodeFunctions', 
     {
         // found in fetch_html_code
+        dirname : __dirname,
         createFile: (path, content, format) => fs.writeFileSync(path, content, format),
         existsSync : (p) => fs.existsSync(p),
         mkdirSync : (p) => fs.mkdirSync(p),
@@ -59,10 +39,6 @@ try {
         readFile: (p) => fs.readFileSync(p, 'utf-8'),
         sendmail : (from, to, subject, text) => send_mail(from, to, subject, text)
 
-    },
-  'nodemail',
-    {
-      
     }
 )}
 catch

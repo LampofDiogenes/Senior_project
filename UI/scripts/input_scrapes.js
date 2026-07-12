@@ -4,36 +4,39 @@
 // looks for sub-sub-urls
 // takes only the sub-sub-urls that have the sub-url inside it
 // if that sub-sub-url has a table, it records it
-async function hobart_brothers( frontend_loading_tag, product_page_number, number_loaded_tag )
+
+
+async function hobart_brothers( 
+    base_URL = 'https://www.hobartbrothers.com/products/?_paged=', 
+    frontend_loading_tag, 
+    product_page_number, 
+    number_loaded_tag )
 {
+    let trimmed_URL =  base_URL.replace(/^\s+|\s+$/gm,'');
+    if (trimmed_URL = '')
+    {
+        base_URL = 'https://www.hobartbrothers.com/products/?_paged='
+    }
 
     const loading_tag = document.getElementById(frontend_loading_tag)
     const product_page_tag = document.getElementById(product_page_number)
     const total_url_number = document.getElementById(number_loaded_tag)
 
-    const base_URL = 'https://www.hobartbrothers.com/products/?_paged='
-    const base_path = './UI/scrapes/hobartbrothers'
+    const base_path = find_base_path(base_URL)
     const number_of_pages = 9
 
     loading_tag.textContent = 'Loading. Please do not close  or navigate from the page.'
     total_url_number.textContent = 'Finding numer of pages to scrape...'
     
-    // create a folder for hobart brothers in the scrapes folder
+    // create a folder for the website in the scrapes folder
     if (!window.nodeFunctions.existsSync(base_path))
     {
         window.nodeFunctions.mkdirSync(base_path)
     }
 
-    const saved_based_path = base_path + '/base_path'
-    if (!window.nodeFunctions.existsSync(saved_based_path))
-    {
-        window.nodeFunctions.createFile(saved_based_path, base_path, 'utf-8')
-    }
-
-
-
     let url_list = []
 
+    // ERROR : THIS NEEDS TO CHANGE OVER HERE IN ORDER TO BECOME UNIVERSAL
     for (let i=1; i <= number_of_pages; i++)
     {
         product_page_tag.textContent = 'product page ' + i + ' out of ' + number_of_pages
@@ -69,10 +72,33 @@ async function hobart_brothers( frontend_loading_tag, product_page_number, numbe
         product_path = find_product_path(url)
         grab_table_from_product(url_data, product_path)
     }
-    
-    
-
     loading_tag.textContent = 'Loaded! '
+}
+
+function find_base_path(base_URL)
+{
+    // remove https://www.
+    // remove the .com and anything after
+    // add the remainder to the end of ./UI/scrapes/
+    let base_path = base_URL
+    let start = base_path.search('www.') + 4
+    base_path = base_path.slice(start)
+
+    let end = base_path.search('.com')
+    base_path = base_path.slice(0, end)
+
+    base_path = window.nodeFunctions.dirname + '/UI/scrapes/' + base_path
+    console.log('base_path is : ', base_path)
+    return base_path
+}
+
+// THIS NEEDS TO REPLACE THE FUNCTION IN hobart_brothers!!!!
+// needs to take the original url, and find any pages in the html that share
+    // the same url
+// then, make an array. Later, we can count them and pass it to the UI
+function find_subpages()
+{
+
 }
 
 // in the page where product urls are mentioned:
@@ -223,6 +249,12 @@ function createFiles(product_path, product_content)
 
 async function load_page(URL)
 {    
+    console.log(URL)
+    if (URL.startsWith('https://') === false)
+    {
+        URL = 'https://' + URL
+    }
+    console.log(URL)
     let response = await fetch(URL);
     // console.log(response); 
     if (!response.ok){
