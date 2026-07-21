@@ -13,14 +13,18 @@
     <!-- Content -->
     <div>
         <p>Target URL (default is hobartbrothers): 
-          <input type="text" id="target_url">
+          <input type="text" id="target_url" value="https://www.hobartbrothers.com">
+        </p>
+
+        <p> Pages to focus on:
+          <input type="text" id="page_focus" value="https://www.hobartbrothers.com/product/product-details">
         </p>
 
         <!-- on click, run the scrape program -->
         <p id="products">  </p>
         <button 
           id="buttonExecute" 
-          onclick="hobart_brothers(target_url.value, 'loading_page', 'product_page_number', 'product_number_loaded')">
+          onclick="hobart_brothers(target_url.value, page_focus.value, 'loading_page', 'product_page_number', 'product_number_loaded')">
           Scrape Website
         </button>
 
@@ -34,7 +38,7 @@
     <script src="./scripts/fetch_navigation.js"></script>
 
     <!-- scrapes websites -->
-    <script src="./scripts/input_scrapes.js"></script>
+    <script src="./scripts/input_scrapes2.js"></script>
 
   </body>
 </html>

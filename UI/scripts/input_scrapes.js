@@ -7,26 +7,33 @@
 
 
 async function hobart_brothers( 
-    base_URL = 'https://www.hobartbrothers.com/products/?_paged=', 
+    base_URL, 
     frontend_loading_tag, 
     product_page_number, 
     number_loaded_tag )
 {
-    let trimmed_URL =  base_URL.replace(/^\s+|\s+$/gm,'');
-    if (trimmed_URL = '')
+    // deciding if the function should run
+    const trimmed_URL =  base_URL.replace(/^\s+|\s+$/gm,'');
+    if (trimmed_URL === '')
     {
+        // backup if changed : 'https://www.hobartbrothers.com/products/?_paged='
         base_URL = 'https://www.hobartbrothers.com/products/?_paged='
     }
+    else
+    {
+        else_function(base_URL, frontend_loading_tag, product_page_number, number_loaded_tag)
+        return
+    }
 
-    const loading_tag = document.getElementById(frontend_loading_tag)
-    const product_page_tag = document.getElementById(product_page_number)
-    const total_url_number = document.getElementById(number_loaded_tag)
+    // continuing with the function (setting variables)
+    const UI_loading_tag = document.getElementById(frontend_loading_tag)
+    const UI_product_page_tag = document.getElementById(product_page_number)
+    const UI_total_url_number = document.getElementById(number_loaded_tag)
 
     const base_path = find_base_path(base_URL)
-    const number_of_pages = 9
 
-    loading_tag.textContent = 'Loading. Please do not close  or navigate from the page.'
-    total_url_number.textContent = 'Finding numer of pages to scrape...'
+    UI_loading_tag.textContent = 'Loading. Please do not close  or navigate from the page.'
+    UI_total_url_number.textContent = 'Finding numer of pages to scrape...'
     
     // create a folder for the website in the scrapes folder
     if (!window.nodeFunctions.existsSync(base_path))
@@ -37,17 +44,26 @@ async function hobart_brothers(
     let url_list = []
 
     // ERROR : THIS NEEDS TO CHANGE OVER HERE IN ORDER TO BECOME UNIVERSAL
+    // const target_URLS = await find_subpages(base_URL)
+    // const number_of_pages = target_URLS.length
+
+    const number_of_pages = 9
+    let target_URLS = []
+    
+    // ??? this is somehow gettings all the URLs already. HOW????
+    console.log('target_URLS is : ', target_URLS) 
+
     for (let i=1; i <= number_of_pages; i++)
     {
-        product_page_tag.textContent = 'product page ' + i + ' out of ' + number_of_pages
+        UI_product_page_tag.textContent = 'product page ' + i + ' out of ' + number_of_pages
         let URL = base_URL + i
         let product_page = await load_page(URL)
 
         // run page function
         url_list = grab_products_from_page(
             product_page, 
-            total_url_number, 
-            url_list)
+            UI_total_url_number, 
+            target_URLS)
     }
 
     let url = String;
@@ -61,7 +77,7 @@ async function hobart_brothers(
         url = url_list[x]
         url_data = await load_page(url)
         url_data_list.push(url_data)
-        total_url_number.textContent = (x+1) + ' out of ' + url_list.length + ' pages loaded'
+        UI_total_url_number.textContent = (x+1) + ' out of ' + url_list.length + ' pages loaded'
     }
 
     console.log('scraping all the urls')
@@ -70,35 +86,50 @@ async function hobart_brothers(
         url_data = url_data_list[j]
         url = url_list[j]
         product_path = find_product_path(url)
-        grab_table_from_product(url_data, product_path)
+        grab_table_from_product(url_data, url)
     }
-    loading_tag.textContent = 'Loaded! '
+    UI_loading_tag.textContent = 'Loaded! '
 }
 
-function find_base_path(base_URL)
+function find_base_path(URL)
 {
     // remove https://www.
+    let start = URL.search('www.') + 4
+    let path = URL.slice(start)
+
     // remove the .com and anything after
-    // add the remainder to the end of ./UI/scrapes/
-    let base_path = base_URL
-    let start = base_path.search('www.') + 4
-    base_path = base_path.slice(start)
-
     let end = base_path.search('.com')
-    base_path = base_path.slice(0, end)
+    path = base_path.slice(0, end)
 
-    base_path = window.nodeFunctions.dirname + '/UI/scrapes/' + base_path
-    console.log('base_path is : ', base_path)
-    return base_path
+    // add the remainder to the end of ./UI/scrapes/
+    path = window.nodeFunctions.dirname + '/UI/scrapes/' + path
+    console.log('base_path is : ', path)
+    return path
 }
 
-// THIS NEEDS TO REPLACE THE FUNCTION IN hobart_brothers!!!!
-// needs to take the original url, and find any pages in the html that share
-    // the same url
-// then, make an array. Later, we can count them and pass it to the UI
-function find_subpages()
+async function find_subpages(base_URL)
 {
+    let home_page = await load_page(base_URL)
+    let url_array = []
 
+    console.log(base_URL)
+    console.log(home_page)
+    console.log('home_page.search() returned : ', home_page.search(base_URL))
+    while (home_page.search(base_URL) != -1 )
+    {
+        url_position = home_page.search(base_URL)
+        home_page = home_page.slice(url_position)
+        url_end = home_page.search('"')
+        let url = home_page.slice(0, url_end)
+
+        if (url_array.includes(url) === false)
+        {
+            url_array.push(url)
+            console.log("added ", url, " to the list")
+        }
+    }
+
+    return url_array
 }
 
 // in the page where product urls are mentioned:
@@ -131,6 +162,16 @@ function grab_products_from_page(product_page, number_tag, found_urls)
         }
     }
     return found_urls
+}
+
+function find_product_path(url)
+{
+    const hobart_path = './UI/scrapes/hobartbrothers'
+    const url_focus = 'www.hobartbrothers.com/product/product-details'
+    let product_name = url.replace(url_focus, "") 
+    product_name = product_name.replace('https://', "")
+
+    const product_path = hobart_path + product_name
 }
 
 function grab_table_from_product(
@@ -175,35 +216,19 @@ function grab_table_from_product(
         }  
 }
 
-function find_product_path(url)
-{
-    const hobart_path = './UI/scrapes/hobartbrothers'
-    const url_focus = 'www.hobartbrothers.com/product/product-details'
-    let product_name = url.replace(url_focus, "") 
-    product_name = product_name.replace('https://', "")
-
-    let product_path = hobart_path + product_name
-    return product_path
-}
-
-function get_scrape_date()
-{
-  const today = new Date()
-  const today_string = 
-  (today.getMonth() + 1) + '-' 
-    + today.getDate() + '-' 
-    + today.getFullYear()
-
-  return today_string
-}
-
 function createFiles(product_path, product_content)
 {
-    const scrape_date = get_scrape_date()
+    
     const scrape1 = product_path + '/' + 'scrape1'
     const scrape2 = product_path + '/' + 'scrape2'
     const scrape1_date_path = product_path + '/' + 'scrape1_date'
     const scrape2_date_path = product_path + '/' + 'scrape2_date'
+
+    const today = new Date()
+    const scrape_date = 
+        (today.getMonth() + 1) + '-' 
+        + today.getDate() + '-' 
+        + today.getFullYear()
 
     if (!window.nodeFunctions.existsSync(product_path))
     {
