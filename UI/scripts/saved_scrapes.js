@@ -2,9 +2,18 @@
 // read the data, and compare the most recent date to the next most recent date
 // determine if any change occured between those two dates
 
-function makeUI(folder_path, dom_target) // asks for the folder to take info from, and place to put information into
+async function makeUI(dom_target) // asks for the folder to take info from, and place to put information into
 {
-    const folder = window.nodeFunctions.readdirSync(folder_path)
+
+    const folder_path = await window.nodeFunctions.getScrapesRoot()
+    // console.log(scrape_root)
+    // folder_path = window.nodeFunctions.joinPath(scrape_root, folder_path)
+
+    if (!window.nodeFunctions.existsSync(folder_path))
+    {
+        return
+    }
+    // const folder = window.nodeFunctions.readdirSync(folder_path)
     website_path = folder_path + '/' + 'hobartbrothers'
     website_folder = window.nodeFunctions.readdirSync(website_path)
     

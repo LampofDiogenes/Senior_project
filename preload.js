@@ -1,4 +1,4 @@
-const { contextBridge } = require('electron');
+const { contextBridge, ipcRenderer } = require('electron');
 const fs  = require('fs');
 const path = require('node:path');
 
@@ -15,8 +15,9 @@ function removeFile(filePath) {
   }
 }
 
-function setPath()
+function packageCreateFile(path, content, format)
 {
+
 
 }
 
@@ -28,11 +29,15 @@ try {
         dirname : __dirname,
         createFile: (path, content, format) => fs.writeFileSync(path, content, format),
         existsSync : (p) => fs.existsSync(p),
-        mkdirSync : (p) => fs.mkdirSync(p),
+        mkdirSync : (p) => fs.mkdirSync(p, {recursive : true}),
 
         // found in saved_scrapes.js
         readdir : (dir) => fs.readdir(dir, (err, files)),
         readdirSync : (dir) => fs.readdirSync(dir),
+
+        // AI suggested functions to make it work while packaged
+        getScrapesRoot: () => ipcRenderer.invoke('get-scrapes-root'),
+        joinPath: (...parts) => path.join(...parts),
 
         // might be important later
         deleteFile : (filePath) => removeFile(filePath),

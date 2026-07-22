@@ -7,7 +7,7 @@
 // on the saved_scrapes.html area, change it so that each folder in the 
 // scrapes area is it's own table. Then, when you click on that table, it collapses.
 
-async function hobart_brothers(target_url='https://www.hobartbrothers.com/products', 
+async function spider_search(target_url='https://www.hobartbrothers.com/products', 
     sub_page_focus='https://www.hobartbrothers.com/product/product-details',
     text1,
     text2,
@@ -21,7 +21,7 @@ async function hobart_brothers(target_url='https://www.hobartbrothers.com/produc
 
 
     console.log('program running')
-    const base_path = find_base_path(target_url)
+    const base_path = await find_base_path(target_url)
     let visited_urls = []
     visited_urls.push(target_url)
 
@@ -62,11 +62,9 @@ async function hobart_brothers(target_url='https://www.hobartbrothers.com/produc
     UI_scraped_page.textContent = "Finished!"
 }
 
-function find_base_path(URL)
+async function find_base_path(URL)
 {
     // remove https://www.
-
-    console.log()
     let start = URL.search('www.') + 4
     let path = URL.slice(start)
 
@@ -74,9 +72,10 @@ function find_base_path(URL)
     let end = path.search('.com')
     path = path.slice(0, end)
 
-    // add the remainder to the end of ./UI/scrapes/
-    path = window.nodeFunctions.dirname + '/UI/scrapes/' + path
-    console.log('base_path is : ', path)
+    // find where the scrapes are being stored, the put the folder in there
+    const scrapesRoot = await window.nodeFunctions.getScrapesRoot()
+    path = window.nodeFunctions.joinPath(scrapesRoot, path)
+
     return path
 }
 

@@ -1,8 +1,26 @@
-const { app, BrowserWindow } = require('electron/main')
+const { app, BrowserWindow, ipcMain } = require('electron/main')
 const path = require('node:path')
 const { session } = require('electron')
+const  fs  = require('node:fs')
+
+
+// this function is failing I think
+function getScrapesRoot() {
+  
+  const scrapesRoot = app.isPackaged
+    ? path.join(app.getPath('userData'), 'web_gnome/scrapes')
+    : path.join(__dirname, 'UI', 'scrapes')
+  
+    // mkdir if missing...
+  if (!fs.existsSync(scrapesRoot)) {
+    fs.mkdirSync(scrapesRoot, { recursive: true })
+  }
+
+  return scrapesRoot
+}
 
 const createWindow = () => {
+  if (require('electron-squirrel-startup')) app.quit();
   const win = new BrowserWindow({
     width: 800,
     height: 600,
@@ -16,13 +34,6 @@ const createWindow = () => {
   })
   win.loadFile('UI/index.html')
 }
-
-// app.whenReady().then(() => {
-//   createWindow()
-// })
-
-secure_startup()
-
 
 async function secure_startup()
 {
@@ -42,4 +53,5 @@ async function secure_startup()
   // })
 }
 
-
+ipcMain.handle('get-scrapes-root', () => getScrapesRoot())
+secure_startup()

@@ -24,13 +24,19 @@
         <p id="products">  </p>
         <button 
           id="buttonExecute" 
-          onclick="hobart_brothers(target_url.value, page_focus.value, 'loading_page', 'product_page_number', 'product_number_loaded')">
+          onclick="spider_search(target_url.value, page_focus.value, 'loading_page', 'product_page_number', 'product_number_loaded')">
           Scrape Website
         </button>
 
         <p id="loading_page"></p>
         <p id="product_page_number"></p>
         <p id="product_number_loaded"></p>
+
+        <button
+          onclick="where_am_i()" 
+        >
+          Where am I?
+        </button>
           
     </div>
 
@@ -39,6 +45,9 @@
 
     <!-- scrapes websites -->
     <script src="./scripts/input_scrapes2.js"></script>
+
+    <!-- finding where the path currently is for testing -->
+    <script src="./scripts/where_am_i.js"></script>
 
   </body>
 </html>
