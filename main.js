@@ -8,10 +8,10 @@ const  fs  = require('node:fs')
 function getScrapesRoot() {
   
   const scrapesRoot = app.isPackaged
-    ? path.join(app.getPath('userData'), 'web_gnome/scrapes')
+    ? path.join(app.getPath('userData'), 'scrapes')
     : path.join(__dirname, 'UI', 'scrapes')
   
-    // mkdir if missing...
+  // mkdir if missing...
   if (!fs.existsSync(scrapesRoot)) {
     fs.mkdirSync(scrapesRoot, { recursive: true })
   }
@@ -32,7 +32,7 @@ const createWindow = () => {
       sandbox : false
     }
   })
-  win.loadFile('UI/index.html')
+  win.loadFile(path.join(__dirname, 'UI', 'index.html'))
 }
 
 async function secure_startup()

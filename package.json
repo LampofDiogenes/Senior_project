@@ -1,7 +1,8 @@
 {
   "name": "web_gnome",
+  "productName": "Web Gnome",
   "version": "1.0.0",
-  "description": "Web Spider and Scraper",
+  "description": "Scrape Websites through a Web Spider.",
   "main": "main.js",
   "scripts": {
     "start": "electron-forge start",

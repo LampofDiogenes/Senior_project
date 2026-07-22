@@ -7,11 +7,7 @@
     <link rel="stylesheet" href="style/saved_scrapes.css">
   </head>
 
-  <body 
-    onload="makeUI( 
-        document.getElementById('data_table')
-      )"
-  >
+  <body>
     <!-- header -->
     <div id="nav_bar"></div>
 
@@ -21,21 +17,20 @@
     <!-- on load, send the information to this div -->
     <table id="data_table">
       <tr>
-        <td> Number </td>
-        <td> Product </td>
-        <td> Date of Last Scrape </td>
-        <td> Date of Next Scrape </td>
-        <td> Status (has the website changed?)</td>
+        <td class="top-table"> Number </td>
+        <td class="top-table"> Product </td>
+        <td class="top-table"> Date of Last Scrape </td>
+        <td class="top-table"> Date of Next Scrape </td>
+        <td class="top-table"> URL </td>
+        <td class="top-table"> Status (has the website changed?)</td>
       </tr>
     </table>
 
+    <!-- builds nav bar -->
+    <script src="./scripts/fetch_navigation.js"></script>
+
+    <!-- displays all file names in a specific folder -->
+    <script src="./scripts/saved_scrapes.js"></script>
   </body>
-  
-  <!-- builds nav bar -->
-  <script src="./scripts/fetch_navigation.js"></script>
-
-  <!-- displays all file names in a sepcifc folder -->
-  <script src="./scripts/saved_scrapes.js"></script>
-
 </html>
     

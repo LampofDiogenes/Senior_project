@@ -7,20 +7,37 @@
 // on the saved_scrapes.html area, change it so that each folder in the 
 // scrapes area is it's own table. Then, when you click on that table, it collapses.
 
-async function spider_search(target_url='https://www.hobartbrothers.com/products', 
-    sub_page_focus='https://www.hobartbrothers.com/product/product-details',
+// if everything has already been scraped, then just use the URLs that have already been cultivated
+async function scrape(target_url, 
+    sub_page_focus,
     text1,
     text2,
     text3)
 {
+    const base_path = await find_base_path(target_url)
 
+    if (!window.nodeFunctions.existsSync(base_path))
+    {
+        spider_search(target_url, 
+            sub_page_focus,
+            text1,
+            text2,
+            text3)
+        return
+    }
 
+}
+
+async function spider_search(target_url, 
+    sub_page_focus,
+    text1,
+    text2,
+    text3)
+{
     const UI_current_page = document.getElementById(text3)
     const UI_visited_page = document.getElementById(text1)
     const UI_scraped_page = document.getElementById(text2)
 
-
-    console.log('program running')
     const base_path = await find_base_path(target_url)
     let visited_urls = []
     visited_urls.push(target_url)
@@ -28,9 +45,6 @@ async function spider_search(target_url='https://www.hobartbrothers.com/products
     // find all the urls contained in the page
     let found_urls = []
     found_urls = await find_subpages(target_url, found_urls)
-    
-
-    console.log('found urls: ', found_urls)
 
     let found_url_count = 0
     for (let i=0; i < found_urls.length; i++)
@@ -49,7 +63,7 @@ async function spider_search(target_url='https://www.hobartbrothers.com/products
             if (url.search(sub_page_focus) !== -1 ) 
             {
                 const product_path = find_product_path(url, sub_page_focus, base_path)
-                create_files(base_path, product_path, page_content)
+                create_files(base_path, product_path, page_content, url)
                 found_url_count += 1
                 UI_scraped_page.textContent = "found url count: " + found_url_count
             }
@@ -91,9 +105,24 @@ async function find_subpages(base_URL, previous_urls) {
     const doc = new DOMParser().parseFromString(home_page, 'text/html')
     const found = new Set()
 
-    for (const el of doc.querySelectorAll('[href], [src]')) {
-        const raw = el.getAttribute('href') || el.getAttribute('src')
-        if (!raw || raw.startsWith('#') || raw.startsWith('mailto:') || raw.startsWith('javascript:')) {
+    const NON_PAGE_EXTENSIONS = new Set([
+        '.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg', '.ico',
+        '.css', '.js', '.mjs', '.map',
+        '.pdf', '.zip', '.doc', '.docx', '.xls', '.xlsx',
+        '.mp4', '.mp3', '.wav', '.woff', '.woff2', '.ttf', '.eot',
+        '.xml', '.json', '.txt'
+    ])
+
+    for (const el of doc.querySelectorAll('a[href], [src]')) {
+        const raw = el.getAttribute('href') // || el.getAttribute('src')
+        if (!raw || 
+            raw.startsWith('#') || 
+            raw.startsWith('mailto:') || 
+            raw.startsWith('javascript:') ||
+            raw.endsWith('.com') ||
+            raw.endsWith('.org') ||
+            raw.endsWith('.edu')
+        ) {
             continue
         }
 
@@ -104,13 +133,9 @@ async function find_subpages(base_URL, previous_urls) {
             continue
         }
 
-        // // this makes it so it doesn't run at all...
-        // if (absolute.search(base) === -1)
-        // {
-        //     break
-        // }
-
         const kept_url = absolute.split('#')[0]
+
+        const url_ending = kept_url.split()
 
         // keep only same-site https links
         if (absolute.startsWith('https://') 
@@ -154,7 +179,7 @@ function find_product_path(url, url_focus, base_path)
     return product_path
 }
 
-function create_files(base_path, product_path, product_content)
+function create_files(base_path, product_path, product_content, url)
 {
     console.log('creating a file! found in: ', product_path)
 
@@ -167,6 +192,7 @@ function create_files(base_path, product_path, product_content)
     const scrape2 = product_path + '/' + 'scrape2'
     const scrape1_date_path = product_path + '/' + 'scrape1_date'
     const scrape2_date_path = product_path + '/' + 'scrape2_date'
+    const url_path = product_path + '/' + 'url'
 
     const today = new Date()
     const scrape_date = 
@@ -178,6 +204,8 @@ function create_files(base_path, product_path, product_content)
     {
         window.nodeFunctions.mkdirSync(product_path)
     }
+
+    window.nodeFunctions.createFile(url_path, url, 'utf-8')
     // if the information is not stored yet
     if (!window.nodeFunctions.existsSync(scrape1) && !window.nodeFunctions.existsSync(scrape2))
     {

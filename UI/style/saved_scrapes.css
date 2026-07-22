@@ -11,3 +11,20 @@ td {
     border-color : black;
     border-width : 1 px;
 }
+
+.throw-alarm {
+    background-color: red;
+}
+
+.throw-warning {
+    background-color : yellow;
+}
+
+.throw-clear {
+    background-color: green;
+}
+
+.top-table {
+    background-color: purple;
+    color : white
+}

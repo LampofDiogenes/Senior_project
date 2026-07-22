@@ -15,12 +15,6 @@ function removeFile(filePath) {
   }
 }
 
-function packageCreateFile(path, content, format)
-{
-
-
-}
-
 try {
   contextBridge.exposeInMainWorld(
     'nodeFunctions', 
@@ -48,5 +42,3 @@ try {
 )}
 catch
 {console.log('issue in preloader')}
-
-console.log('preloader loaded')
