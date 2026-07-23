@@ -44,7 +44,8 @@ async function spider_search(target_url,
                 const product_path = find_product_path(url, sub_page_focus, base_path)
                 if(product_path !== 'skip')
                 {
-                    create_files(base_path, product_path, page_content, url)
+                    const normalized_content = normalizeScrapeHtml(page_content)
+                    create_files(base_path, product_path, normalized_content, url)
                 }
                 found_url_count += 1
                 UI_scraped_page.textContent = "found url count: " + found_url_count
@@ -110,6 +111,13 @@ function isCrawlablePageUrl(absoluteUrl, baseHostname)
     return true
 }
 
+function normalizeScrapeHtml(html)
+{
+    return html
+        .replace(/data-cfemail="[^"]*"/gi, 'data-cfemail=""')
+        .replace(/\/cdn-cgi\/l\/email-protection#[a-f0-9]+/gi, '/cdn-cgi/l/email-protection')
+}
+
 async function find_subpages(base_URL, previous_urls, target_url, sub_page_focus) {
 
     const home_page = await load_page(base_URL)
@@ -152,22 +160,16 @@ async function find_subpages(base_URL, previous_urls, target_url, sub_page_focus
 
 function find_product_path(url, url_focus, base_path)
 {
-    console.log('finding product path')
-    console.log('url focus is: ', url_focus)
-    console.log('url is: ', url)
     let product_name = url.replace(url_focus, "") 
     let start = product_name.search("www.")
     if (start !== -1)
-    product_name = product_name.split((start + 4))
-    console.log("after being replaced, url is: ", product_name)
+    {
+        product_name = product_name.split((start + 4))
+    }
     
-
     let product_clean = product_name.replaceAll("/", " ")
     product_clean = product_clean.trim()
-    console.log('product_clean is: ', product_clean)
     let product_array = product_clean.split(" ")
-    console.log('product_array is: ', product_array)
-
 
     if (product_array.length > 1) {
         product_name = 'skip'
