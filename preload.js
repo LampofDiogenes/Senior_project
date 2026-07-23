@@ -36,6 +36,9 @@ try {
         // might be important later
         deleteFile : (filePath) => removeFile(filePath),
         readFile: (p) => fs.readFileSync(p, 'utf-8'),
+        statSync: (p) => fs.statSync(p),
+        isDirectory: (p) => fs.statSync(p).isDirectory(),
+        fileSize: (p) => fs.statSync(p).size,
         sendmail : (from, to, subject, text) => send_mail(from, to, subject, text)
 
     }

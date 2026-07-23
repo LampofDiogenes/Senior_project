@@ -22,9 +22,14 @@ td {
 
 .throw-clear {
     background-color: green;
+    color : white
 }
-
 .top-table {
     background-color: purple;
+    color : white
+}
+
+.table-element {
+    background-color: gray;
     color : white
 }

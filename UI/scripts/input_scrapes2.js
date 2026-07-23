@@ -7,27 +7,6 @@
 // on the saved_scrapes.html area, change it so that each folder in the 
 // scrapes area is it's own table. Then, when you click on that table, it collapses.
 
-// if everything has already been scraped, then just use the URLs that have already been cultivated
-async function scrape(target_url, 
-    sub_page_focus,
-    text1,
-    text2,
-    text3)
-{
-    const base_path = await find_base_path(target_url)
-
-    if (!window.nodeFunctions.existsSync(base_path))
-    {
-        spider_search(target_url, 
-            sub_page_focus,
-            text1,
-            text2,
-            text3)
-        return
-    }
-
-}
-
 async function spider_search(target_url, 
     sub_page_focus,
     text1,
@@ -44,7 +23,7 @@ async function spider_search(target_url,
 
     // find all the urls contained in the page
     let found_urls = []
-    found_urls = await find_subpages(target_url, found_urls)
+    found_urls = await find_subpages(target_url, found_urls, target_url, sub_page_focus)
 
     let found_url_count = 0
     for (let i=0; i < found_urls.length; i++)
@@ -63,12 +42,15 @@ async function spider_search(target_url,
             if (url.search(sub_page_focus) !== -1 ) 
             {
                 const product_path = find_product_path(url, sub_page_focus, base_path)
-                create_files(base_path, product_path, page_content, url)
+                if(product_path !== 'skip')
+                {
+                    create_files(base_path, product_path, page_content, url)
+                }
                 found_url_count += 1
                 UI_scraped_page.textContent = "found url count: " + found_url_count
             }
 
-            let new_urls = await find_subpages(url, found_urls)
+            let new_urls = await find_subpages(url, found_urls, target_url, sub_page_focus)
 
             found_urls = found_urls.concat(new_urls)
         }
@@ -93,18 +75,8 @@ async function find_base_path(URL)
     return path
 }
 
-
-// this works great, but allows a few too many websites to get in
-// I highly doubt I need to go through 2,000 websites in order to collect the ~150 websites I need
-async function find_subpages(base_URL, previous_urls) {
-
-    // ??? isn't this redundant?
-    const home_page = await load_page(base_URL)
-    const base = new URL(base_URL)
-
-    const doc = new DOMParser().parseFromString(home_page, 'text/html')
-    const found = new Set()
-
+function isCrawlablePageUrl(absoluteUrl, baseHostname)
+{
     const NON_PAGE_EXTENSIONS = new Set([
         '.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg', '.ico',
         '.css', '.js', '.mjs', '.map',
@@ -112,37 +84,66 @@ async function find_subpages(base_URL, previous_urls) {
         '.mp4', '.mp3', '.wav', '.woff', '.woff2', '.ttf', '.eot',
         '.xml', '.json', '.txt'
     ])
+    let parsed
+    try {
+        parsed = new URL(absoluteUrl)
+    } catch {
+        return false
+    }
 
-    for (const el of doc.querySelectorAll('a[href], [src]')) {
-        const raw = el.getAttribute('href') // || el.getAttribute('src')
-        if (!raw || 
-            raw.startsWith('#') || 
-            raw.startsWith('mailto:') || 
+    if (parsed.protocol !== 'https:') {
+        return false
+    }
+    if (parsed.hostname !== baseHostname) {
+        return false
+    }
+
+    const pathname = parsed.pathname.toLowerCase()
+    const dot = pathname.lastIndexOf('.')
+    if (dot !== -1) {
+        const ext = pathname.slice(dot)
+        if (NON_PAGE_EXTENSIONS.has(ext)) {
+            return false
+        }
+    }
+
+    return true
+}
+
+async function find_subpages(base_URL, previous_urls, target_url, sub_page_focus) {
+
+    const home_page = await load_page(base_URL)
+    const base = new URL(base_URL)
+
+    const doc = new DOMParser().parseFromString(home_page, 'text/html')
+    const found = new Set()
+
+    for (const el of doc.querySelectorAll('a[href]')) {
+        const raw = el.getAttribute('href')
+        if (!raw ||
+            raw.startsWith('#') ||
+            raw.startsWith('mailto:') ||
             raw.startsWith('javascript:') ||
-            raw.endsWith('.com') ||
-            raw.endsWith('.org') ||
-            raw.endsWith('.edu')
+            raw.startsWith('tel:')
         ) {
             continue
         }
 
         let absolute
         try {
-            absolute = new URL(raw, base).href  // resolves relative + // links
+            absolute = new URL(raw, base).href
         } catch {
             continue
         }
 
         const kept_url = absolute.split('#')[0]
 
-        const url_ending = kept_url.split()
-
-        // keep only same-site https links
-        if (absolute.startsWith('https://') 
-            && new URL(absolute).hostname === base.hostname 
-            && previous_urls.includes(kept_url) === false) 
-        {
-            found.add(kept_url)  // drop fragments
+        // maybe change it so that it is rejected unless the url contains URL focus or starting URL
+        if (isCrawlablePageUrl(kept_url, base.hostname) && 
+            !previous_urls.includes(kept_url) &&
+            (kept_url.includes(target_url) || kept_url.includes(sub_page_focus))
+        ) {
+            found.add(kept_url)
         }
     }
 
@@ -169,7 +170,8 @@ function find_product_path(url, url_focus, base_path)
 
 
     if (product_array.length > 1) {
-        product_name = 'Garbage'
+        product_name = 'skip'
+        return product_name
     }
     else{
         product_name = product_clean
